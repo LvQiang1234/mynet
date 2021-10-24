@@ -80,10 +80,12 @@ func (this *ServerSocket) Start() bool {
 	return true
 }
 
+//初始化种子
 func (this *ServerSocket) AssignClientId() uint32 {
 	return atomic.AddUint32(&this.m_nIdSeed, 1)
 }
 
+//
 func (this *ServerSocket) GetClientById(id uint32) *ServerSocketClient {
 	this.m_ClientLocker.RLock()
 	client, exist := this.m_ClientList[id]
@@ -137,6 +139,7 @@ func (this *ServerSocket) LoadClient() *ServerSocketClient {
 	return s
 }
 
+//停止该server
 func (this *ServerSocket) Stop() bool {
 	if this.m_bShuttingDown {
 		return true

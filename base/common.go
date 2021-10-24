@@ -22,6 +22,7 @@ const (
 )
 
 var (
+	// 服务器名称 account world netgate
 	SEVERNAME      string
 	TCP_END_LENGTH = len([]byte(TCP_END)) //tcp结束标志长度
 )

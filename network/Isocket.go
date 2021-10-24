@@ -43,7 +43,7 @@ type (
 
 		m_SendTimes      int
 		m_ReceiveTimes   int
-		m_bShuttingDown  bool
+		m_bShuttingDown  bool           //是否正在关闭
 		m_PacketFuncList *vector.Vector //call back
 
 		m_bHalf            bool
@@ -131,6 +131,7 @@ func (this *Socket) Send(rpc.RpcHead, []byte) int {
 	return 0
 }
 
+//状态重置
 func (this *Socket) Clear() {
 	this.m_nState = SSF_SHUT_DOWN
 	//this.m_nConnectType = CLIENT_CONNECT
@@ -142,6 +143,7 @@ func (this *Socket) Clear() {
 	this.m_nHalfSize = 0
 }
 
+//关闭连接
 func (this *Socket) Close() {
 	if this.m_Conn != nil {
 		this.m_Conn.Close()
