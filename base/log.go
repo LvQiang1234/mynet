@@ -24,9 +24,9 @@ type (
 		m_Logger    [LG_MAX]log.Logger
 		m_pFile     [LG_MAX]*os.File
 		m_Time      time.Time
-		m_FileName  string
-		m_LogSuffix string
-		m_ErrSuffix string
+		m_FileName  string //文件名
+		m_LogSuffix string //日志后缀
+		m_ErrSuffix string //错误后缀
 		m_Loceker   sync.Mutex
 	}
 
@@ -43,10 +43,12 @@ type (
 	}
 )
 
+// 全局的日志器
 var (
 	GLOG *CLog
 )
 
+// 日志器并且初始化全局日志器
 func (this *CLog) Init(fileName string) bool {
 	//this.m_pFile = nil
 	this.m_FileName = fileName
@@ -56,6 +58,7 @@ func (this *CLog) Init(fileName string) bool {
 	return true
 }
 
+// 根据日志类型返回日志级别
 func (this *CLog) GetSuffix(nType LG_TYPE) string {
 	if nType == LG_WARN {
 		return this.m_LogSuffix
@@ -64,6 +67,7 @@ func (this *CLog) GetSuffix(nType LG_TYPE) string {
 	}
 }
 
+//
 func (this *CLog) Write(nType LG_TYPE) {
 	this.WriteFile(nType)
 	tTime := time.Now()
@@ -132,17 +136,18 @@ func (this *CLog) WriteFile(nType LG_TYPE) {
 	if this.m_pFile[nType] == nil || this.m_Time.Year() != tTime.Year() ||
 		this.m_Time.Month() != tTime.Month() || this.m_Time.Day() != tTime.Day() {
 		this.m_Loceker.Lock()
+		//
 		if this.m_pFile[nType] != nil {
 			defer this.m_pFile[nType].Close()
 		}
-
+		//判断路径是否存在，不存在就常见目录
 		if PathExists(PATH) == false {
 			os.Mkdir(PATH, os.ModeDir)
 		}
-
-		sFileName := fmt.Sprintf("%s/%s_%d%02d%02d.%s", PATH, this.m_FileName, tTime.Year(), tTime.Month(), tTime.Day(),
+		// 设置文件名 文件名+时间+日志类型
+		sFileName := fmt.Sprintf("%s_%d%02d%02d.%s", this.m_FileName, tTime.Year(), tTime.Month(), tTime.Day(),
 			this.GetSuffix(nType))
-
+		// 如果文件不存在就创建文件
 		if PathExists(sFileName) == false {
 			os.Create(sFileName)
 		}
@@ -151,11 +156,13 @@ func (this *CLog) WriteFile(nType LG_TYPE) {
 		if err != nil {
 			log.Fatalf("open logfile[%s] error", sFileName)
 		}
-
+		//设置输出到文件
 		this.m_Logger[nType].SetOutput(this.m_pFile[nType])
+		// 日志输出格式
 		this.m_Logger[nType].SetPrefix(fmt.Sprintf("[%04d-%02d-%02d %02d:%02d:%02d]", tTime.Year(), tTime.Month(), tTime.Day(),
 			tTime.Hour(), tTime.Minute(), tTime.Second()))
 		this.m_Logger[nType].SetFlags(log.Llongfile)
+		// 更新时间
 		Stat, _ := this.m_pFile[nType].Stat()
 		if Stat != nil {
 			this.m_Time = Stat.ModTime()

@@ -175,6 +175,7 @@ func GetDBTime(strTime string) *time.Time {
 	return &loginTime
 }
 
+//判断这个路径是否存在
 func PathExists(path string) bool {
 	_, err := os.Stat(path)
 	if err == nil {

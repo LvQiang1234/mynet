@@ -17,8 +17,8 @@ const (
 
 type (
 	Vector struct {
-		mElementCount int
-		mArraySize    int
+		mElementCount int //元素的个数
+		mArraySize    int //切片的容量
 		mArray        []interface{}
 	}
 
@@ -42,20 +42,23 @@ type (
 	}
 )
 
+//插入
 func (this *Vector) insert(index int) {
+	//判断要插入的位置必须在存在元素之前
 	assert(index <= this.mElementCount, "Vector<T>::insert - out of bounds index.")
-
+	//如果容量满了扩容
 	if this.mElementCount == this.mArraySize {
 		this.resize(this.mElementCount + 1)
 	} else {
 		this.mElementCount++
 	}
-
+	//调整值
 	for i := this.mElementCount - 1; i > index; i-- {
 		this.mArray[i] = this.mArray[i-1]
 	}
 }
 
+//元素数量增加
 func (this *Vector) increment() {
 	if this.mElementCount == this.mArraySize {
 		this.resize(this.mElementCount + 1)
@@ -64,11 +67,13 @@ func (this *Vector) increment() {
 	}
 }
 
+//元素数量减少
 func (this *Vector) decrement() {
 	assert(this.mElementCount != 0, "Vector<T>::decrement - cannot decrement zero-length vector.")
 	this.mElementCount--
 }
 
+//扩容
 func (this *Vector) resize(newCount int) bool {
 	if newCount > 0 {
 		blocks := newCount / VectorBlockSize
@@ -83,14 +88,17 @@ func (this *Vector) resize(newCount int) bool {
 	return true
 }
 
+//移除某个元素
 func (this *Vector) Erase(index int) {
+	// 边界情况
 	assert(index < this.mElementCount, "Vector<T>::erase - out of bounds index.")
+	// 调整位置
 	if index < this.mElementCount-1 {
 		for i := index; i < this.mElementCount-1; i++ {
 			this.mArray[i] = this.mArray[i+1]
 		}
 	}
-
+	//更新元素个数
 	this.mElementCount--
 }
 
@@ -162,6 +170,7 @@ func (this *Vector) Less(i, j int) bool {
 	return true
 }
 
+// 生成器
 func NewVector() *Vector {
 	return &Vector{}
 }

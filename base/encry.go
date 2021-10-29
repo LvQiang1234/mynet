@@ -6,6 +6,7 @@ import (
 	"io"
 )
 
+// md5加密字符串
 func MD5(str string) string {
 	h := md5.New()
 	io.WriteString(h, str)

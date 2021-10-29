@@ -63,7 +63,8 @@ func (this *ServerMgr) Init() bool {
 	DB_Server = this.m_config.Get3("AccountDB", "DB_LANIP")
 	DB_Name = this.m_config.Get3("AccountDB", "DB_Name")
 	DB_UserId = this.m_config.Get3("AccountDB", "DB_UserId")
-	DB_Password = this.m_config.Get3("AccountDB", "DB_Password")
+	//DB_Password = this.m_config.Get3("AccountDB", "DB_Password")
+	DB_Password = "#Lv1516305754"
 	Nats_Cluster = this.m_config.Get("Nats_Cluster")
 
 	ShowMessage := func() {
