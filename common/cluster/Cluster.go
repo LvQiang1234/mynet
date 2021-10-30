@@ -18,6 +18,7 @@ const (
 )
 
 type (
+	//ip的hash值与ClusterInfo的映射
 	HashClusterMap       map[uint32]*common.ClusterInfo
 	HashClusterSocketMap map[uint32]*common.ClusterInfo
 

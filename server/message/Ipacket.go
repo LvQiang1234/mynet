@@ -27,6 +27,7 @@ type (
 	}
 )
 
+//构建包头
 func BuildPacketHead(id int64, destservertype rpc.SERVICE) *Ipacket {
 	ipacket := &Ipacket{
 		Stx:            Default_Ipacket_Stx,
@@ -37,6 +38,7 @@ func BuildPacketHead(id int64, destservertype rpc.SERVICE) *Ipacket {
 	return ipacket
 }
 
+// 获得消息的名称
 func GetMessageName(packet proto.Message) string {
 	sType := strings.ToLower(proto.MessageName(packet))
 	index := strings.Index(sType, ".")
@@ -47,8 +49,11 @@ func GetMessageName(packet proto.Message) string {
 }
 
 func Encode(packet proto.Message) []byte {
+	// packetid为packet的名称的循环冗余校验码
 	packetId := base.GetMessageCode1(GetMessageName(packet))
+	// 序列化packet
 	buff, _ := proto.Marshal(packet)
+	// 总消息
 	data := append(base.IntToBytes(int(packetId)), buff...)
 	return data
 }
@@ -59,6 +64,7 @@ func EncodeEx(packetName string, buf []byte) []byte {
 	return data
 }
 
+// 解析出packetid和proto消息
 func Decode(buff []byte) (uint32, []byte) {
 	packetId := uint32(base.BytesToInt(buff[0:4]))
 	return packetId, buff[4:]

@@ -70,6 +70,7 @@ func (this *HashRing) remove(elt string) {
 	delete(this.m_MemberMap, elt)
 }
 
+//循环冗余算法得出校验码
 func (this *HashRing) hashKey(key string) uint32 {
 	if len(key) < 64 {
 		var scratch [64]byte

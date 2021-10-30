@@ -19,12 +19,14 @@ type (
 	}
 )
 
+//初始化版本号
 func (this *CVersion) Init() {
 	var bv1, bv2, bv3, bv4 int
 	fmt.Sscanf(BUILD_NO, "%d,%d,%d,%d", &bv1, &bv2, &bv3, &bv4)
 	this.m_sBuildVer = int64(bv1*1000*1000*1000 + bv2*1000*1000 + bv3*1000 + bv4)
 }
 
+//检查版本号
 func (this *CVersion) IsAcceptableBuildVersion(version string) bool {
 	var v [4]int
 	var sClient int64

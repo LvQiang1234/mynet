@@ -24,6 +24,7 @@ type (
 	}
 )
 
+//
 func (this *BitMap) Init(size int) {
 	this.m_Size = int(math.Ceil(float64(size) / float64(size_int)))
 	this.m_Bits = make([]int, this.m_Size)

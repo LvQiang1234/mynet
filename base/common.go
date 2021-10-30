@@ -215,6 +215,7 @@ func ToLower(name string) string {
 	return strings.ToLower(name)
 }
 
+//长度+消息
 func SetTcpEnd(buff []byte) []byte {
 	buff = append(IntToBytes(len(buff)), buff...)
 	return buff

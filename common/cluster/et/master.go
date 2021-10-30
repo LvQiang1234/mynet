@@ -15,7 +15,7 @@ import (
 //监控服务器
 type (
 	Master struct {
-		m_ServiceMap map[uint32]*common.ClusterInfo
+		m_ServiceMap map[uint32]*common.ClusterInfo //ip的hash值与ClusterInfo的映射
 		m_KeysAPI    client.KeysAPI
 		m_Actor      actor.IActor
 		common.IClusterInfo

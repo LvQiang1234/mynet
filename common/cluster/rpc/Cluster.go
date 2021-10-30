@@ -31,13 +31,13 @@ type (
 	//集群客户端
 	Cluster struct {
 		actor.Actor
-		m_ClusterMap     map[uint32]*ClusterNode
+		m_ClusterMap     map[uint32]*ClusterNode //ip的hash值与ClusterNode的映射
 		m_ClusterLocker  *sync.RWMutex
 		m_Packet         IClusterPacket
 		m_Master         *Master
-		m_HashRing       *base.HashRing //hash一致性
-		m_ClusterInfoMap map[uint32]*common.ClusterInfo
-		m_PacketFuncList *vector.Vector //call back
+		m_HashRing       *base.HashRing                 //hash一致性
+		m_ClusterInfoMap map[uint32]*common.ClusterInfo //ip的hash值与ClusterInfo的映射
+		m_PacketFuncList *vector.Vector                 //call back
 	}
 
 	ICluster interface {

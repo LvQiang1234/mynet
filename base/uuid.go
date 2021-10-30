@@ -71,10 +71,13 @@ func (this *Snowflake) Init(workerid int64) {
 // Generate creates and returns a unique snowflake ID
 func (this *Snowflake) UUID() int64 {
 	this.Lock()
+	//时间戳
 	now := time.Now().UnixNano() / 1000000
+	//判断是否是同一毫秒内
 	if this.timestamp == now {
+		//序号字段加1
 		this.sequence = (this.sequence + 1) & sequenceMask
-
+		//到达最大序号4095
 		if this.sequence == 0 {
 			for now <= this.timestamp {
 				now = time.Now().UnixNano() / 1000000
@@ -85,11 +88,13 @@ func (this *Snowflake) UUID() int64 {
 	}
 
 	this.timestamp = now
+	//生成uuid
 	r := int64((now-twepoch)<<timestampShift | (this.workerid << workeridShift) | (this.sequence))
 	this.Unlock()
 	return r
 }
 
+//解析uuid
 func ParseUUID(id int64) (ts int64, workerId int64, seq int64) {
 	seq = id & sequenceMask
 	workerId = (id >> workeridShift) & workeridMax
@@ -99,12 +104,14 @@ func ParseUUID(id int64) (ts int64, workerId int64, seq int64) {
 }
 
 //----------WorkIdQue----------//
+//初始化
 func (this *WorkIdQue) Init(id int) {
 	this.m_WorkMap = make(map[uint32]int)
 	this.m_IdelVec = vector.NewVector()
 	this.m_Id = id
 }
 
+//
 func (this *WorkIdQue) Add(val string) int {
 	nVal := ToHash(val)
 	nId, bExist := this.m_WorkMap[nVal]
@@ -137,6 +144,7 @@ func (this *WorkIdQue) Del(val string) int {
 	return nId
 }
 
+//全局的雪花算法生成uuid
 var (
 	UUID = ISnowflake(&Snowflake{})
 )

@@ -39,11 +39,13 @@ var (
 	g_pAccount = &AccountInfo{}
 )
 
+//初始化一个accountinfo
 func NewAccountInfo(socket uint32, accountId int64) *AccountInfo {
 	accountInfo := AccountInfo{LastTime: time.Now().Unix(), SocketId: socket, WClusterId: 0, AccountId: accountId, ZClusterId: 0}
 	return &accountInfo
 }
 
+// 关闭某个socketid的客户端
 func (this *PlayerManager) ReleaseSocketMap(socketId uint32, bClose bool) {
 	this.m_Locker.RLock()
 	accountId, _ := this.m_SocketMap[socketId]
@@ -57,7 +59,9 @@ func (this *PlayerManager) ReleaseSocketMap(socketId uint32, bClose bool) {
 	//}
 }
 
+//
 func (this *PlayerManager) AddAccountMap(accountId int64, socketId uint32) int {
+	//关闭以前socketid客户端
 	Id := this.GetSocket(accountId)
 	this.ReleaseSocketMap(Id, Id != socketId)
 
@@ -68,10 +72,12 @@ func (this *PlayerManager) AddAccountMap(accountId int64, socketId uint32) int {
 	this.m_AccountMap[accountId] = accountInfo
 	this.m_SocketMap[socketId] = accountId
 	this.m_Locker.Unlock()
+	//给世界服发消息
 	SERVER.GetCluster().SendMsg(rpc.RpcHead{ClusterId: accountInfo.WClusterId, DestServerType: rpc.SERVICE_WORLDSERVER}, "G_W_CLoginRequest", accountId, SERVER.GetCluster().Id(), accountInfo.ZClusterId)
 	return base.NONE_ERROR
 }
 
+// 根据accountid得到socketid
 func (this *PlayerManager) GetSocket(accountId int64) uint32 {
 	socketId := uint32(0)
 	this.m_Locker.RLock()
@@ -83,6 +89,7 @@ func (this *PlayerManager) GetSocket(accountId int64) uint32 {
 	return socketId
 }
 
+// 根据accountid得到socketid
 func (this *PlayerManager) GetAccount(socketId uint32) int64 {
 	accoundId := int64(0)
 	this.m_Locker.RLock()
@@ -94,6 +101,7 @@ func (this *PlayerManager) GetAccount(socketId uint32) int64 {
 	return accoundId
 }
 
+// 根据socketid得到accountinfo
 func (this *PlayerManager) GetAccountInfo(socketId uint32) *AccountInfo {
 	accountId := this.GetAccount(socketId)
 	this.m_Locker.RLock()
@@ -105,6 +113,7 @@ func (this *PlayerManager) GetAccountInfo(socketId uint32) *AccountInfo {
 	return nil
 }
 
+// 初始化
 func (this *PlayerManager) Init(num int) {
 	this.Actor.Init(num)
 	this.m_SocketMap = make(map[uint32]int64)

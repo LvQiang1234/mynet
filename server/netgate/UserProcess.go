@@ -35,6 +35,7 @@ type (
 	}
 )
 
+//判断client是否存在
 func (this *UserPrcoess) CheckClientEx(sockId uint32, packetName string, head rpc.RpcHead) bool {
 	if IsCheckClient(packetName) {
 		return true

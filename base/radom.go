@@ -11,6 +11,7 @@ type (
 	}
 )
 
+// 随机i到j整数 左开右闭
 func (this *Rand) RandI(i int, n int) int {
 	if i > n {
 		Assert(false, "Rand::RandI: inverted range")

@@ -17,9 +17,9 @@ type (
 	//集群服务器
 	ClusterServer struct {
 		actor.Actor
-		*Service           //集群注册
-		m_ClusterMap       HashClusterMap
-		m_ClusterSocketMap HashClusterSocketMap
+		*Service                                //集群注册
+		m_ClusterMap       HashClusterMap       //ip的hash值与ClusterInfo的映射
+		m_ClusterSocketMap HashClusterSocketMap //socketid与ClusterInfo的映射
 		m_ClusterLocker    *sync.RWMutex
 		m_pService         *network.ServerSocket //socket管理
 		m_HashRing         *base.HashRing        //hash一致性
