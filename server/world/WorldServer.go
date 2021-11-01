@@ -113,6 +113,7 @@ func (this *ServerMgr) Init() bool {
 	this.m_pCluster = new(cluster.Cluster)
 	this.m_pCluster.Init(1000, &common.ClusterInfo{Type: rpc.SERVICE_WORLDSERVER, Ip: UserNetIP, Port: int32(base.Int(UserNetPort))}, EtcdEndpoints, Nats_Cluster)
 
+	//
 	var packet EventProcess
 	packet.Init(1000)
 	this.m_pCluster.BindPacketFunc(packet.PacketFunc)

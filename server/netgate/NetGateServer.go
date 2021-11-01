@@ -82,6 +82,8 @@ func (this *ServerMgr) Init() bool {
 	this.m_pService.SetMaxReceiveBufferSize(base.MAX_CLIENT_PACKET)
 	this.m_pService.SetConnectType(network.CLIENT_CONNECT)
 	//this.m_pService.Start()
+
+	//处理客户端发来的消息
 	packet := new(UserPrcoess)
 	packet.Init(1000)
 	this.m_pService.BindPacketFunc(packet.PacketFunc)
@@ -99,6 +101,7 @@ func (this *ServerMgr) Init() bool {
 	this.m_pService.Start()*/
 	//注册到集群服务器
 
+	//处理消息队列里的消息
 	var packet1 EventProcess
 	packet1.Init(1000)
 	this.m_pCluster = new(cluster.Cluster)

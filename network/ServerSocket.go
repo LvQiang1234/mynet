@@ -104,6 +104,7 @@ func (this *ServerSocket) AddClinet(tcpConn *net.TCPConn, addr string, connectTy
 		pClient.m_pServer = this
 		pClient.m_ReceiveBufferSize = this.m_ReceiveBufferSize
 		pClient.m_MaxReceiveBufferSize = this.m_MaxReceiveBufferSize
+		//客户端id自增
 		pClient.m_ClientId = this.AssignClientId()
 		pClient.m_sIP = addr
 		pClient.SetConnectType(connectType)

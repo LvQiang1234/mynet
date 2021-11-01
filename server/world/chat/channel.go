@@ -56,6 +56,7 @@ func (this *Channel) GetPlayer(playerId int64) *player {
 	return nil
 }
 
+//广播给所有的玩家
 func (this *Channel) SendMessage(msg *ChatMessage) {
 	for _, v := range this.m_playerMap {
 		SendMessage(msg, v)
