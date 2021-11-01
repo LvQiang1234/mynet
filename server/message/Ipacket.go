@@ -12,7 +12,7 @@ import (
 var (
 	Packet_CreateFactorStringMap map[string]func() proto.Message
 	Packet_CreateFactorMap       map[uint32]func() proto.Message
-	Packet_CrcNamesMap           map[uint32]string
+	Packet_CrcNamesMap           map[uint32]string //message的crc32 => message的name
 )
 
 const (
@@ -89,7 +89,6 @@ func GetPakcet(packetId uint32) proto.Message {
 	if exist {
 		return packetFunc()
 	}
-
 	return nil
 }
 
@@ -101,6 +100,7 @@ func UnmarshalText(packet proto.Message, packetBuf []byte) error {
 	return proto.Unmarshal(packetBuf, packet)
 }
 
+// 初始化
 func init() {
 	Packet_CreateFactorStringMap = make(map[string]func() proto.Message)
 	Packet_CreateFactorMap = make(map[uint32]func() proto.Message)

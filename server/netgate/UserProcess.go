@@ -18,7 +18,7 @@ var (
 type (
 	UserPrcoess struct {
 		actor.Actor
-		m_KeyMap map[uint32]*base.Dh
+		m_KeyMap map[uint32]*base.Dh // socketid	=》 密匙
 	}
 
 	IUserPrcoess interface {

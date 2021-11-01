@@ -25,15 +25,15 @@ type (
 	//集群服务器
 	Cluster struct {
 		actor.Actor
-		*Service         //集群注册
-		m_ClusterMap     [MAX_CLUSTER_NUM]HashClusterMap
+		*Service                                         //集群注册
+		m_ClusterMap     [MAX_CLUSTER_NUM]HashClusterMap //服务器 =》（ip的hash值 =》 ClusterInfo）
 		m_ClusterLocker  [MAX_CLUSTER_NUM]*sync.RWMutex
 		m_HashRing       [MAX_CLUSTER_NUM]*base.HashRing //hash一致性
 		m_Conn           *nats.Conn
 		m_DieChan        chan bool
 		m_Master         *Master
-		m_ClusterInfoMap map[uint32]*common.ClusterInfo
-		m_PacketFuncList *vector.Vector //call back
+		m_ClusterInfoMap map[uint32]*common.ClusterInfo //ip的hash值 =》 ClusterInfo
+		m_PacketFuncList *vector.Vector                 //call back
 	}
 
 	ICluster interface {
@@ -123,6 +123,7 @@ func (this *Cluster) AddCluster(info *common.ClusterInfo) {
 	this.m_ClusterLocker[info.Type].Lock()
 	this.m_ClusterMap[info.Type][info.Id()] = info
 	this.m_ClusterLocker[info.Type].Unlock()
+
 	this.m_HashRing[info.Type].Add(info.IpString())
 	base.GLOG.Printf("服务器[%s:%s:%d]建立连接", info.String(), info.Ip, info.Port)
 }
@@ -172,11 +173,15 @@ func (this *Cluster) SendMsg(head rpc.RpcHead, funcName string, params ...interf
 func (this *Cluster) Send(head rpc.RpcHead, buff []byte) {
 	switch head.SendType {
 	case rpc.SEND_BALANCE:
+		// 哈希一致性做负载均衡
 		_, head.ClusterId = this.m_HashRing[head.DestServerType].Get64(head.Id)
+		// 发布消息
 		this.m_Conn.Publish(getRpcChannel(head), buff)
 	case rpc.SEND_POINT:
+		//直接发到对应的机器上
 		this.m_Conn.Publish(getRpcChannel(head), buff)
 	default:
+		//直接发到对应的机器上
 		this.m_Conn.Publish(getRpcTopicChannel(head), buff)
 	}
 }

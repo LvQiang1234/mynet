@@ -42,6 +42,7 @@ func NewSnowflake(Endpoints []string) *Snowflake {
 	return (*Snowflake)(uuid)
 }
 
+// 对应消息管道的名称
 func getChannel(clusterInfo common.ClusterInfo) string {
 	return fmt.Sprintf("%s/%s/%d", ETCD_DIR, clusterInfo.String(), clusterInfo.Id())
 }
@@ -58,6 +59,7 @@ func getRpcTopicChannel(head rpc.RpcHead) string {
 	return fmt.Sprintf("%s/%s", ETCD_DIR, strings.ToLower(head.DestServerType.String()))
 }
 
+// 链接nats
 func setupNatsConn(connectString string, appDieChan chan bool, options ...nats.Option) (*nats.Conn, error) {
 	natsOptions := append(
 		options,

@@ -89,7 +89,7 @@ func (this *PlayerManager) GetSocket(accountId int64) uint32 {
 	return socketId
 }
 
-// 根据accountid得到socketid
+// 根据socketid得到accountid
 func (this *PlayerManager) GetAccount(socketId uint32) int64 {
 	accoundId := int64(0)
 	this.m_Locker.RLock()

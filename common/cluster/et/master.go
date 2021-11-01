@@ -96,6 +96,7 @@ func (this *Master) Run() {
 	}
 }
 
+// 得到所有的服务
 func (this *Master) GetServices() []*common.ClusterInfo {
 	services := []*common.ClusterInfo{}
 	resp, err := this.m_KeysAPI.Get(context.Background(), ETCD_DIR+this.String(), &client.GetOptions{Quorum: true})
