@@ -1,9 +1,9 @@
 package common
 
 import (
-	"gonet/base"
-	"gonet/base/vector"
 	"math"
+	"mynet/base"
+	"mynet/base/vector"
 	"strings"
 )
 

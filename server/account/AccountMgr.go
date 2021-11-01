@@ -70,6 +70,7 @@ func (this *AccountMgr) Init(num int) {
 	this.Actor.Start()
 }
 
+//
 func (this *AccountMgr) GetAccount(accountId int64) *Account {
 	pAccount, exist := this.m_AccountMap[accountId]
 	if exist {

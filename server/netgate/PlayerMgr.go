@@ -39,11 +39,13 @@ var (
 	g_pAccount = &AccountInfo{}
 )
 
+//生成账号信息
 func NewAccountInfo(socket uint32, accountId int64) *AccountInfo {
 	accountInfo := AccountInfo{LastTime: time.Now().Unix(), SocketId: socket, WClusterId: 0, AccountId: accountId, ZClusterId: 0}
 	return &accountInfo
 }
 
+//
 func (this *PlayerManager) ReleaseSocketMap(socketId uint32, bClose bool) {
 	this.m_Locker.RLock()
 	accountId, _ := this.m_SocketMap[socketId]
