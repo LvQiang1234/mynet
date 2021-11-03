@@ -218,15 +218,17 @@ ParsePacekt:
 	bFindFlag, nPacketSize = seekToTcpEnd(buff[nCurSize:])
 	//fmt.Println(bFindFlag, nPacketSize, nBufferSize)
 	if bFindFlag {
-		if nBufferSize == nPacketSize { //完整包
-			this.HandlePacket(Id, buff[nCurSize+base.TCP_HEAD_SIZE:nCurSize+nPacketSize])
+		if nBufferSize == nPacketSize { //刚好完整包
+			this.HandlePacket(Id, buff[nCurSize+base.TCP_HEAD_SIZE:nCurSize+nPacketSize]) //处理包的消息
 			nCurSize += nPacketSize
 		} else if nBufferSize > nPacketSize {
 			this.HandlePacket(Id, buff[nCurSize+base.TCP_HEAD_SIZE:nCurSize+nPacketSize])
+			//调整索引位置
 			nCurSize += nPacketSize
+			//继续解包
 			goto ParsePacekt
 		}
-	} else if nBufferSize < this.m_MaxReceiveBufferSize {
+	} else if nBufferSize < this.m_MaxReceiveBufferSize { //再重新放入缓冲区中
 		this.m_MaxReceiveBuffer = buff[nCurSize:]
 	} else {
 		fmt.Println("超出最大包限制，丢弃该包")

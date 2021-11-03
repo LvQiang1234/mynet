@@ -161,9 +161,12 @@ func (this *Actor) Send(head rpc.RpcHead, buff []byte) {
 
 // 解析出rpc调用
 func (this *Actor) PacketFunc(id uint32, buff []byte) bool {
+	//解析出rpcpacket和头
 	rpcPacket, head := rpc.UnmarshalHead(buff)
+	//找到注册的回调函数
 	if this.FindCall(rpcPacket.FuncName) != nil {
 		head.SocketId = id
+		//写到actor的事件的IO管道中
 		this.Send(head, buff)
 		return true
 	}

@@ -105,6 +105,7 @@ func (this *UserPrcoess) PacketFunc(socketid uint32, buff []byte) bool {
 
 	//获取配置的路由地址
 	destServerType := packet.(message.Packet).GetPacketHead().DestServerType
+	//解析出数据
 	err := message.UnmarshalText(packet, data)
 	if err != nil {
 		SERVER.GetLog().Printf("包解析错误2  socket=%d", socketid)
@@ -120,6 +121,7 @@ func (this *UserPrcoess) PacketFunc(socketid uint32, buff []byte) bool {
 
 	packetName := message.GetMessageName(packet)
 	head := rpc.RpcHead{Id: packetHead.Id, SrcClusterId: SERVER.GetCluster().Id()}
+
 	if packetName == C_A_LoginRequest {
 		head.ClusterId = socketid
 	} else if packetName == C_A_RegisterRequest {
@@ -162,7 +164,9 @@ func (this *UserPrcoess) Init(num int) {
 		dh := base.Dh{}
 		dh.Init()
 		dh.ExchangePubk(packet.GetKey())
+		//保存客户端的密匙
 		this.addKey(head.SocketId, &dh)
+		//发送相应，吧netgate的密匙发送回去
 		SendToClient(head.SocketId, &message.G_C_LoginResponse{PacketHead: message.BuildPacketHead(0, 0), Key: dh.PubKey()})
 	})
 

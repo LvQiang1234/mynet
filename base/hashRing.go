@@ -18,9 +18,9 @@ var ErrEmptyRing = errors.New("empty ring")
 type (
 	// HashRing holds the information about the members of the consistent hash ring.
 	HashRing struct {
-		m_RingMap    map[uint32]string
-		m_MemberMap  map[string]bool
-		m_SortedKeys *maps.Map
+		m_RingMap    map[uint32]string //elt的crc32  =》elt
+		m_MemberMap  map[string]bool   //elt  =》 是否存在
+		m_SortedKeys *maps.Map         //elt的crc32 =》 是否存在
 		sync.RWMutex
 	}
 
@@ -53,10 +53,14 @@ func (this *HashRing) eltKey(elt string, idx int) string {
 // need c.Lock() before calling
 func (this *HashRing) add(elt string) {
 	for i := 0; i < REPLICASNUM; i++ {
+
 		Id := this.hashKey(this.eltKey(elt, i))
+
 		this.m_RingMap[Id] = elt
+
 		this.m_SortedKeys.Put(Id, true)
 	}
+
 	this.m_MemberMap[elt] = true
 }
 

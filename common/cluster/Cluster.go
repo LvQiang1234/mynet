@@ -81,11 +81,11 @@ func (this *Cluster) Init(num int, info *common.ClusterInfo, Endpoints []string,
 		log.Fatal("nats connect error!!!!")
 	}
 	this.m_Conn = conn
-
+	//点对点的消息订阅
 	this.m_Conn.Subscribe(getChannel(*info), func(msg *nats.Msg) {
 		this.HandlePacket(0, msg.Data)
 	})
-
+	//rpc消息订阅
 	this.m_Conn.Subscribe(getTopicChannel(*info), func(msg *nats.Msg) {
 		this.HandlePacket(0, msg.Data)
 	})
