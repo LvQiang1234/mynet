@@ -206,7 +206,7 @@ func (this *Socket) ReceivePacket(Id uint32, dat []byte) bool {
 		}
 		return false, 0
 	}
-
+	// 将读取到数据加到缓冲区中
 	buff := append(this.m_MaxReceiveBuffer, dat...)
 	this.m_MaxReceiveBuffer = []byte{}
 	nCurSize := 0

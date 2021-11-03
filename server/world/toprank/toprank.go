@@ -24,6 +24,7 @@ const (
 	TOP_RANK_SYNC_TIME = 3 * 60
 )
 
+//排行榜的一个表项
 type (
 	TopRank struct {
 		Id       int64  `sql:"primary;name:id" json:"id"`
@@ -58,7 +59,7 @@ type (
 
 		m_db           *sql.DB
 		m_Log          *base.CLog
-		m_topRankMap   [ETopType_End]TOPRANKMAP
+		m_topRankMap   [ETopType_End]TOPRANKMAP //Type =》 （id =》 TopRank）
 		m_topRankSet   [ETopType_End]TOPRANKSET
 		m_topRankTimer *common.SimpleTimer
 	}
@@ -78,6 +79,7 @@ type (
 	}
 )
 
+//一行对应一个表项
 func loadTopRank(row db.IRow, t *TopRank) {
 	t.Id = row.Int64("id")
 	t.Type = int8(row.Int("type"))

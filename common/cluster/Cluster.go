@@ -170,6 +170,7 @@ func (this *Cluster) SendMsg(head rpc.RpcHead, funcName string, params ...interf
 	this.Send(head, buff)
 }
 
+//
 func (this *Cluster) Send(head rpc.RpcHead, buff []byte) {
 	switch head.SendType {
 	case rpc.SEND_BALANCE:

@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	Packet_CreateFactorStringMap map[string]func() proto.Message
-	Packet_CreateFactorMap       map[uint32]func() proto.Message
-	Packet_CrcNamesMap           map[uint32]string //message的crc32 => message的name
+	Packet_CreateFactorStringMap map[string]func() proto.Message //消息名和消息生成器的映射
+	Packet_CreateFactorMap       map[uint32]func() proto.Message //消息名的crc32与消息生成器的映射
+	Packet_CrcNamesMap           map[uint32]string               //message的crc32 => message的name
 )
 
 const (
@@ -70,6 +70,7 @@ func Decode(buff []byte) (uint32, []byte) {
 	return packetId, buff[4:]
 }
 
+//注册消息得到消息生成器
 func RegisterPacket(packet proto.Message) {
 	packetName := GetMessageName(packet)
 	val := reflect.ValueOf(packet).Elem()
@@ -84,6 +85,7 @@ func RegisterPacket(packet proto.Message) {
 	Packet_CreateFactorMap[base.GetMessageCode1(packetName)] = packetFunc
 }
 
+//根据packetid得到消息
 func GetPakcet(packetId uint32) proto.Message {
 	packetFunc, exist := Packet_CreateFactorMap[packetId]
 	if exist {

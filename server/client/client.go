@@ -23,6 +23,7 @@ func main() {
 	port, _ := strconv.Atoi(UserNetPort)
 	CLIENT = new(network.ClientSocket)
 	CLIENT.Init(UserNetIP, port)
+
 	PACKET = new(EventProcess)
 	PACKET.Init(1)
 	CLIENT.BindPacketFunc(PACKET.PacketFunc)

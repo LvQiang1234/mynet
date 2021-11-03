@@ -82,6 +82,7 @@ func (this *ServerMgr) Init() bool {
 	this.m_pService.SetMaxReceiveBufferSize(base.MAX_CLIENT_PACKET)
 	this.m_pService.SetConnectType(network.CLIENT_CONNECT)
 	//this.m_pService.Start()
+
 	packet := new(UserPrcoess)
 	packet.Init(1000)
 	this.m_pService.BindPacketFunc(packet.PacketFunc)
